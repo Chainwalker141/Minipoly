@@ -4,11 +4,15 @@
 
 // function prototypes
 int mainMenu();
-void board(char[6][6], char [6][6]);
-void clearBoard(char[6][6]);
-int movement(int, char[6][6], char);
-int buyProperty(int*, int, char[6][6], char);
+void board(char[20], char [20]);
+void clearBoard(char[20]);
+int movement(int, int, char[20], char, char);
+int rent(int, int*, char, char[20]);
+int checkJail(int, char[20]);
+int checkTax(int*, int);
+int buyProperty(int*, int, char[20], char);
 int diceRoll();
+int debugRoll();
 char userInterface(float, float);
 void winner(int, int);
 
@@ -31,46 +35,30 @@ int mainMenu()
     
     printf("Enter Number: ");
     scanf("%d", &selectedMode);
-    
-    while(selectedMode <= 0 || selectedMode > 3)  // for invalid number inputs
-    {
-	    printf("\n\nInvalid Selection, try again\n\n");	
-	    	
-	    printf("Welcome to Minipoly!\n");
-	    printf("A Game by Joaquin Sinjian\n");
-	    printf("Of Section S21B\n\n");
-	    printf("==============================\n\n");
-	    printf("Choose a Mode\n");
-	    printf("[1] How to Play\n");
-	    printf("[2] Play Mode\n");
-	    printf("[3] Debug Mode\n");
-	    
-	    printf("Enter Number: ");
-	    scanf("%d", &selectedMode);
-	}
+
 	return selectedMode;
 }
 
 /*
 	function for displaying the board
 */
-void board(char rows[6][6], char properties[6][6])
+void board(char rows[20], char properties[20])
 {
 	printf("\n        e   f   g   h        \n"); 
 	printf("  +---+---+---+---+---+---+  \n"); 
-	printf("  |%c V|%c %c|%c %c|%c %c|%c %c|%c P|  \n", rows[0][5], rows[1][0], properties[1][0], rows[1][1], properties[1][1], 
-                                                            rows[2][0], properties[2][0], rows[2][1], properties[2][1], rows[3][0]);
+	printf("  |%c V|%c %c|%c %c|%c %c|%c %c|%c P|  \n", rows[5], rows[6], properties[6], rows[7], properties[7], 
+                                                            rows[8], properties[8], rows[9], properties[9], rows[10]);
 	printf("  +---+---+---+---+---+---+  \n");
-	printf(" d|%c %c|               |%c %c|i \n", rows[0][4], properties[0][4], rows[3][1], properties[3][1]);
+	printf(" d|%c %c|               |%c %c|i \n", rows[4], properties[4], rows[11], properties[11]);
 	printf("  +---+               +---+  \n");
-	printf(" c|%c %c|               |%c %c|j \n", rows[0][3], properties[0][3], rows[4][0], properties[4][0]);
+	printf(" c|%c %c|               |%c %c|j \n", rows[3], properties[3], rows[12], properties[12]);
 	printf("  +---+               +---+  \n");
-	printf(" b|%c %c|               |%c %c|k \n", rows[0][2], properties[0][2], rows[4][1], properties[4][1]);
+	printf(" b|%c %c|               |%c %c|k \n", rows[2], properties[2], rows[13], properties[13]);
 	printf("  +---+               +---+  \n");
-	printf(" a|%c %c|               |%c %c|l \n", rows[0][1], properties[0][1], rows[5][0], properties[5][0]);
+	printf(" a|%c %c|               |%c %c|l \n", rows[1], properties[1], rows[14], properties[14]);
 	printf("  +---+---+---+---+---+---+  \n");
-	printf("  |%c G|%c %c|%c T|%c %c|%c %c|%c J|  \n", rows[0][0], rows[5][5], properties[5][5], rows[5][4], rows[5][3], properties[5][3], 
-                                                            rows[5][2], properties[5][2], rows[5][1], properties[5][1]);
+	printf("  |%c G|%c %c|%c T|%c %c|%c %c|%c J|  \n", rows[0], rows[19], properties[19], rows[18], rows[17], properties[17], 
+                                                            rows[16], properties[16], rows[15], properties[15]);
 	printf("  +---+---+---+---+---+---+  \n");
 	printf("        o       n   m        \n");
 }
@@ -87,6 +75,19 @@ int diceRoll()
 	diceRoll = (rand() % 6) + 1;
 
 	return diceRoll;
+}
+
+/*
+    function for debug diceroll
+*/
+int debugRoll()
+{
+    int number;
+
+    printf("Enter a roll number (0-19): ");
+    scanf("%d", &number);
+
+    return number;
 }
 
 /*
@@ -112,207 +113,135 @@ char userInterface(float balanceP1, float balanceP2)
 }
 
 /*
-	function for decided action
-*/
-
-
-/*
 	function for player movement
 */
-int movement(int total, char rows[6][6], char player)
+int movement(int totalP1, int totalP2, char rows[20], char player1, char player2)
 {
-    switch(total)
+    clearBoard(rows);
+
+    if(totalP1 == totalP2)
     {
-        case 1 :
-            clearBoard(rows);
-            rows[0][0] = player;
-            break;
-        case 2 :
-            clearBoard(rows);
-            rows[0][1] = player;
-            break;
-        case 3 :
-            clearBoard(rows);
-            rows[0][2] = player;
-            break ;
-        case 4 :
-            clearBoard(rows);
-            rows[0][3] = player;
-            break;
-        case 5:
-            clearBoard(rows);
-            rows[0][4] = player;
-            break;
-        case 6:
-            clearBoard(rows);
-            rows[0][5] = player;
-            break;
-        case 7 :
-            clearBoard(rows);
-            rows[1][0] = player;
-            break;
-        case 8 :
-            clearBoard(rows);
-            rows[1][1] = player;
-            break;
-        case 9 :
-            clearBoard(rows);
-            rows[2][0] = player;
-            break ;
-        case 10 :
-            clearBoard(rows);
-            rows[2][1] = player;
-            break;
-        case 11 :
-            clearBoard(rows);
-            rows[3][0] = player;
-            break;
-        case 12 :
-            clearBoard(rows);
-            rows[3][1] = player;
-            break;
-        case 13 :
-            clearBoard(rows);
-            rows[4][0] = player;
-            break;
-        case 14 :
-            clearBoard(rows);
-            rows[4][1] = player;
-            break;
-        case 15 :
-            clearBoard(rows);
-            rows[5][0] = player;
-            break ;
-        case 16 :
-            clearBoard(rows);
-            rows[5][1] = player;
-            break;
-        case 17 :
-            clearBoard(rows);
-            rows[5][2] = player;
-            break;
-        case 18:
-            clearBoard(rows);
-            rows[5][3] = player;
-            break;
-        case 19:
-            clearBoard(rows);
-            rows[5][4] = player;
-            break;
-        case 20:
-            clearBoard(rows);
-            rows[5][5] = player;
-            break;
+        rows[totalP1] = '3'; // if both are on the same tile
+    }
+    else
+    {
+        rows[totalP1] = player1;
+        rows[totalP2] = player2;
     }
 }
 
-int buyProperty(int *balance, int total, char properties[6][6], char indicator)
+/*
+    function to check if in jail
+*/
+int checkJail(int total, char rows[20])
 {
-    switch(total)
+    total = total == 15;
+
+    return total;
+}
+
+/*
+    function to check if player is on tax tile
+*/
+int checkTax(int *bal, int total)
+{
+    if(total == 18)
     {
-		case 1 :
-			printf("You cannot buy this property!");
-            break;
-        case 2 :
-			*balance -= 2000000;
-            properties[0][1] = indicator;
-			return *balance;
-            break;
-        case 3 :
-			*balance -= 2000000;
-            properties[0][2] = indicator;
-			return *balance;
-            break ;
-        case 4 :
-			*balance -= 2000000;
-            properties[0][3] = indicator;
-			return *balance;
-            break;
-        case 5:
-			*balance -= 2000000;
-            properties[0][4] = indicator;
-			return *balance;
-            break;
-		case 6 :
-			printf("You cannot buy this property!");
-            break;
-        case 7 :
-			*balance -= 4000000;
-            properties[1][0] = indicator;
-			return *balance;
-            break;
-        case 8 :
-			*balance -= 4000000;
-            properties[1][1] = indicator;
-			return *balance;
-            break;
-        case 9 :
-			*balance -= 4000000;
-            properties[2][0] = indicator;
-			return *balance;
-            break ;
-        case 10 :
-			*balance -= 4000000;
-            properties[2][1] = indicator;
-			return *balance;
-            break;
-		case 11 :
-			printf("You cannot buy this property!");
-            break;
-        case 12 :
-			*balance -= 6000000;
-            properties[3][1] = indicator;
-			return *balance;
-            break;
-        case 13 :
-			*balance -= 6000000;
-            properties[4][0] = indicator;
-			return *balance;
-            break;
-        case 14 :
-			*balance -= 6000000;
-            properties[4][1] = indicator;
-			return *balance;
-            break;
-        case 15 :
-			*balance -= 6000000;
-            properties[5][0] = indicator;
-			return *balance;
-            break ;
-		case 16 :
-			printf("You cannot buy this property!");
-            break;
-        case 17 :
-			*balance -= 8000000;
-            properties[5][2] = indicator;
-			return *balance;
-            break;
-        case 18:
-			*balance -= 8000000;
-            properties[5][3] = indicator;
-			return *balance;
-            break;
-        case 20:
-			*balance -= 8000000;
-            properties[5][5] = indicator;
-			return *balance;
-            break;
+        *bal -= 1000000;
+        return *bal;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/*
+    function for buying properties & checks if property is owned
+*/
+int buyProperty(int *balance, int total, char properties[20], char indicator)
+{
+    if(properties[total] == 'X' || properties[total] == 'Y')// checks if property is occupied
+    {
+        printf("\nThis tile is already owned by someone!\n");
+    }
+    else
+    {
+        if (total >= 1 && total <= 4)
+        {
+            *balance -= 2000000;
+            properties[total] = indicator;
+            return *balance;
+        }
+        else if (total >= 6 && total <= 9)
+        {
+            *balance -= 4000000;
+            properties[total] = indicator;
+            return *balance;
+        }
+        else if (total >= 11 && total <= 14)
+        {
+            *balance -= 6000000;
+            properties[total] = indicator;
+            return *balance;
+        }
+        else if (total == 16 || total == 17 || total == 19)
+        {
+            *balance -= 8000000;
+            properties[total] = indicator;
+            return *balance;
+        }
+        else
+        {
+            printf("You cannot buy on this tile!");
+        }
+    }
+}
+
+/*
+    function for renting
+*/
+int rent(int total, int *bal, char oppProperty, char properties[20])
+{
+    if(properties[total] == oppProperty)
+    {
+        if (total >= 1 && total <= 4)
+        {
+            *bal -= 300000;
+            return *bal;
+        }
+        else if (total >= 6 && total <= 9)
+        {
+            *bal -= 500000;
+            return *bal;
+        }
+        else if (total >= 11 && total <= 14)
+        {
+            *bal -= 1000000;
+            return *bal;
+        }
+        else if (total == 16 || total == 17 || total == 19)
+        {
+            *bal -= 2000000;
+            return *bal;
+        }
+    }
+    else
+    {
+        return 0;
     }
 }
 
 /*
 	function to clear the board
 */
-void clearBoard(char rows[6][6])
+void clearBoard(char rows[20])
 {
     int i,j;
 
-    for(i = 0; i < 6; i++)
+    for(i = 0; i < 20; i++)
     {
-        for(j = 0; j < 6; j++)
-        {
-            rows[i][j] = ' ';
-        }
+       rows[i] = ' ';
     }
 }
 

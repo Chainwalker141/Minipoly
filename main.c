@@ -62,7 +62,6 @@ int main()
 							case 1:
 								roll = diceRoll();
 								passedGo(&balanceP1, totalMovesP1, roll, player1);
-
 								if (totalMovesP1 + roll >= 21)
 								{
 									totalMovesP1 = (totalMovesP1 + roll) % 21 + 1; // to prevent a totalMoves of 0
@@ -175,8 +174,8 @@ int main()
 						{
 							case 1:
 								roll = debugRoll();
-								passedGo(&balanceP1, totalMovesP1, roll, player1);
-								totalMovesP1 = roll % 21; // 21 % 21 + 1 = 1 which is the go tile
+								debugPassedGo(&balanceP1, totalMovesP1, player1);
+								totalMovesP1 = roll % 21; // to not go over a total of 20
 								
 								movement(totalMovesP1, totalMovesP2, movementTiles, player1, player2);
 								checkTax(&balanceP1, totalMovesP1, player1);
@@ -222,8 +221,8 @@ int main()
 						{
 							case 1:
 								roll = debugRoll();
-								passedGo(&balanceP2, totalMovesP2, roll, player2);
-								totalMovesP2 = roll % 21; // 21 % 21 = 1 which is the go tile
+								debugPassedGo(&balanceP2, totalMovesP2, player2);
+								totalMovesP2 = roll % 21; // to not go over a total of 20
 								
 								movement(totalMovesP1, totalMovesP2, movementTiles, player1, player2);
 								checkTax(&balanceP2, totalMovesP2, player2);

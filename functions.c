@@ -4,6 +4,7 @@
 
 // function prototypes
 int mainMenu();
+void howToPlay();
 void board(char[21], char [21]);
 void clearBoard(char[21]);
 void movement(int, int, char[21], char, char);
